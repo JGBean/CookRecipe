@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "889790200998",
+    "project_id": "cook-recipe-app",
+    "storage_bucket": "cook-recipe-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889790200998:android:0306e390c08fa271964867",
+        "android_client_info": {
+          "package_name": "com.cook_recipe_app.firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1fCh4O1lQ2mbx5Q_yFZDaBTtlmMd3wIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889790200998:android:664c0bb3e9ea2eae964867",
+        "android_client_info": {
+          "package_name": "net.cookrecipe.firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1fCh4O1lQ2mbx5Q_yFZDaBTtlmMd3wIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
