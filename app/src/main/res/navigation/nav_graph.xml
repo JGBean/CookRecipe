@@ -20,4 +20,9 @@
         android:name="com.example.egg_nav.RecipeFragment"
         android:label="fragment_recipe"
         tools:layout="@layout/fragment_recipe" />
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.cook_recipe_app.CommunityFragment"
+        android:label="freagment_community"
+        tools:layout="@layout/fragment_community" />
 </navigation>
