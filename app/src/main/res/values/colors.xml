@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#6A6A6A</color>
     <color name="lightYellow">#F9EAB0</color>
     <!-- colors.xml -->
         <color name="purple_200">#BB86FC</color>

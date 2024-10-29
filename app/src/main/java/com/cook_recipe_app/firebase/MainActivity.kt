@@ -1,4 +1,5 @@
-package com.cook_recipe_app
+package com.cook_recipe_app.firebase
+
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,6 +7,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.cook_recipe_app.firebase.CommunityFragment
+import com.cook_recipe_app.firebase.MypageFragment
+import com.cook_recipe_app.firebase.RecipeFragment
 import com.cook_recipe_app.firebase.R
 import com.cook_recipe_app.firebase.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView

@@ -1,4 +1,4 @@
-package com.cook_recipe_app
+package com.cook_recipe_app.firebase
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
