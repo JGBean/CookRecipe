@@ -6,21 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class CountryRecipeFragment : Fragment() {
+class CountryRecipeFragment : BaseFragment() {
+
+    companion object {
+        fun newInstance(): CountryRecipeFragment {
+            return CountryRecipeFragment()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_country_recipe, container, false)
-    }
-
-    companion object {
-        // newInstance 메서드 추가
-        @JvmStatic
-        fun newInstance(): CountryRecipeFragment {
-            return CountryRecipeFragment()
-        }
     }
 }

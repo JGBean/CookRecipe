@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.cook_recipe_app.firebase.databinding.FragmentRecipeBinding
 
-class RecipeFragment : Fragment() {
+class RecipeFragment : BaseFragment() {
 
     private lateinit var binding: FragmentRecipeBinding
 
@@ -25,23 +25,16 @@ class RecipeFragment : Fragment() {
 
         // 카드뷰 클릭 리스너 설정
         binding.country.setOnClickListener {
-            replaceFragment(CountryRecipeFragment.newInstance()) // 예시 프래그먼트로 변경
+            replaceFragment(CountryRecipeFragment.newInstance())
         }
-
-//        binding.recipeIngredient.setOnClickListener {
-//            replaceFragment(IngredientRecipeFragment.newInstance()) // 예시 프래그먼트로 변경
-//        }
-//
-//        binding.recipeEasy.setOnClickListener {
-//            replaceFragment(EasyRecipeFragment.newInstance()) // 예시 프래그먼트로 변경
-//        }
     }
 
     // Fragment 교체 함수
     private fun replaceFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_recipe1, fragment) // FrameLayout의 id
-            addToBackStack(null) // 뒤로 가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아가기
+        // `R.id.fragment_container`는 activity_main.xml에서 정의한 FrameLayout입니다.
+        requireActivity().supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, fragment) // activity_main.xml의 컨테이너 ID로 교체
+            addToBackStack(null) // 뒤로 가기 버튼으로 돌아갈 수 있게 설정
             commit()
         }
     }

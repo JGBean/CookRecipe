@@ -12,7 +12,7 @@
         tools:layout="@layout/activity_splash" />
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.cook_recipe_app.firebase.MainActivity"
+        android:name="com.cook_recipe_app.firebase.MainActivity2"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
     <fragment
