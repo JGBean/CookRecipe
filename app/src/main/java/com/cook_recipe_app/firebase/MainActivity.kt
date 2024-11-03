@@ -1,6 +1,5 @@
 package com.cook_recipe_app.firebase
 
-
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
