@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.cook_recipe_app.firebase.R
 
 
-class MypageFragment : Fragment() {
+class MypageFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
