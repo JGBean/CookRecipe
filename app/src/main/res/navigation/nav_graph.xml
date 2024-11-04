@@ -20,4 +20,9 @@
         android:name="com.cook_recipe_app.firebase.RecipeFragment"
         android:label="fragment_recipe"
         tools:layout="@layout/fragment_recipe" />
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.cook_recipe_app.firebase.CommunityFragment"
+        android:label="fragment_community"
+        tools:layout="@layout/fragment_community" />
 </navigation>
