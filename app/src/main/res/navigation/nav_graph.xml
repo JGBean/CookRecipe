@@ -12,7 +12,7 @@
         tools:layout="@layout/activity_splash" />
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.cook_recipe_app.firebase.MainActivity2"
+        android:name="com.cook_recipe_app.firebase.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
     <fragment
@@ -20,4 +20,14 @@
         android:name="com.cook_recipe_app.firebase.RecipeFragment"
         android:label="fragment_recipe"
         tools:layout="@layout/fragment_recipe" />
+    <fragment
+        android:id="@+id/countryRecipeFragment"
+        android:name="com.cook_recipe_app.firebase.CountryRecipeFragment"
+        android:label="fragment_country_recipe"
+        tools:layout="@layout/fragment_country_recipe" />
+    <fragment
+        android:id="@+id/menuListFragment"
+        android:name="com.cook_recipe_app.firebase.MenuListFragment"
+        android:label="fragment_menu_list"
+        tools:layout="@layout/fragment_menu_list" />
 </navigation>
