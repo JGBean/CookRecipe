@@ -30,4 +30,10 @@
         android:name="com.cook_recipe_app.firebase.MenuListFragment"
         android:label="fragment_menu_list"
         tools:layout="@layout/fragment_menu_list" />
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.cook_recipe_app.firebase.CommunityFragment"
+        android:label="fragment_community"
+        tools:layout="@layout/fragment_community" />
+
 </navigation>

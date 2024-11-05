@@ -5,12 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.content.Intent
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.cook_recipe_app.firebase.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
 
 /**
  * A simple [Fragment] subclass.
@@ -21,6 +24,7 @@ class CommunityFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +39,15 @@ class CommunityFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_community, container, false)
+        val view = inflater.inflate(R.layout.fragment_community, container, false)
+
+        // FAB 설정
+        fab = view.findViewById(R.id.fab)
+        fab.setOnClickListener {
+            val intent = Intent(activity, CommunityPostActivity::class.java)
+            startActivity(intent)
+        }
+        return view  // Inflate된 view를 반환
     }
 
     companion object {

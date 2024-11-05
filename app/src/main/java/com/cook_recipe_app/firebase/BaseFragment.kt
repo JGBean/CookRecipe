@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.cook_recipe_app.firebase.ui.home.HomeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 open class BaseFragment : Fragment() {
