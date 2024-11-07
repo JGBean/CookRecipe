@@ -16,8 +16,5 @@
     <string name="prompt_password">Password</string>
     <string name="login">로그인</string>
     <string name="sign_up">회원가입</string>
-<<<<<<< HEAD
-=======
     <string name="create_post">게시글 작성하기</string>
->>>>>>> refs/remotes/origin/develop
 </resources>

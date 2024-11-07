@@ -46,6 +46,7 @@ class MenuListFragment : BaseFragment() {
 
     private fun loadMenuItems() {
         db.collection("menuItems")
+            .orderBy("category")
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

@@ -49,4 +49,3 @@ class MenuAdapter(private val menuItems: List<MenuItem>) : RecyclerView.Adapter<
         return menuItems.size
     }
 }
-
