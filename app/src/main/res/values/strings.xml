@@ -17,4 +17,8 @@
     <string name="login">로그인</string>
     <string name="sign_up">회원가입</string>
     <string name="create_post">게시글 작성하기</string>
+    <string name="back">뒤로가기</string>
+    <string name="post">작성하기</string>
+    <string name="enter_title">제목을 입력해주세요.</string>
+    <string name="enter_details">내용을 입력해주세요.</string>
 </resources>

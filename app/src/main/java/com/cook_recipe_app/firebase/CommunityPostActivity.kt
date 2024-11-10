@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.widget.ImageButton
 
 class CommunityPostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +16,12 @@ class CommunityPostActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // 뒤로가기 버튼 설정
+        val backButton: ImageButton = findViewById(R.id.imageButton3)
+        backButton.setOnClickListener {
+            finish() // 액티비티 종료
         }
     }
 }
