@@ -19,7 +19,7 @@
         android:theme="?attr/actionBarTheme">
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/imb_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -31,7 +31,7 @@
             android:layout_height="match_parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/b_post"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:backgroundTint="@color/lightYellow"
@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/Edit_Title"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:ems="10"
@@ -49,7 +49,7 @@
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/Edit_Contents"
         android:layout_width="match_parent"
         android:layout_height="591dp"
         android:ems="10"
