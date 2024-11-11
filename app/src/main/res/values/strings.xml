@@ -21,4 +21,7 @@
     <string name="post">작성하기</string>
     <string name="enter_title">제목을 입력해주세요.</string>
     <string name="enter_details">내용을 입력해주세요.</string>
+
+    <string name="like_button">좋아요 버튼</string>
+
 </resources>

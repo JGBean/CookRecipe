@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cook_recipe_app.firebase.databinding.MenuHeaderBinding
 import com.cook_recipe_app.firebase.databinding.MenuListBinding
 
-class MenuAdapter(private val menuItems: List<MenuItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MenuAdapter(
+    private val menuItems: List<MenuItem>,
+    private val onItemClick: (MenuItem) -> Unit // 클릭 리스너 추가
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // ViewHolder for Header
     inner class HeaderViewHolder(private val binding: MenuHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -17,8 +20,11 @@ class MenuAdapter(private val menuItems: List<MenuItem>) : RecyclerView.Adapter<
 
     // ViewHolder for Item
     inner class ItemViewHolder(private val binding: MenuListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(name: String) {
-            binding.menuText.text = name
+        fun bind(menuItem: MenuItem) {
+            binding.menuText.text = menuItem.name
+            binding.root.setOnClickListener {
+                onItemClick(menuItem) // 아이템 클릭 시 리스너 호출
+            }
         }
     }
 
@@ -41,7 +47,7 @@ class MenuAdapter(private val menuItems: List<MenuItem>) : RecyclerView.Adapter<
         if (holder is HeaderViewHolder) {
             holder.bind(menuItem.name) // 헤더에는 카테고리 이름이 표시됩니다.
         } else if (holder is ItemViewHolder) {
-            holder.bind(menuItem.name) // 아이템에는 메뉴 이름이 표시됩니다.
+            holder.bind(menuItem) // 아이템에는 메뉴 이름이 표시됩니다.
         }
     }
 

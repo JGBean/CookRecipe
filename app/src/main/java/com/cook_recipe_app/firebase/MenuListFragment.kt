@@ -1,16 +1,16 @@
 package com.cook_recipe_app.firebase
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.cook_recipe_app.firebase.databinding.FragmentMenuListBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MenuListFragment : BaseFragment() {
+class MenuListFragment : Fragment() {
     private var _binding: FragmentMenuListBinding? = null
     private val binding get() = _binding!!
 
@@ -23,7 +23,6 @@ class MenuListFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // View Binding 초기화
         _binding = FragmentMenuListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,8 +36,17 @@ class MenuListFragment : BaseFragment() {
         // Firestore 초기화 및 데이터 로드
         db = FirebaseFirestore.getInstance()
 
-        // Adapter 초기화
-        adapter = MenuAdapter(menuItems)
+        // 어댑터 초기화, 클릭 리스너 추가
+        adapter = MenuAdapter(menuItems) { menuItem ->
+            if (menuItem.name == "비빔밥") {
+                // BibimbabFragment로 이동하기 위한 FragmentTransaction 설정
+                val fragment = BibimbabFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment) // fragment_container는 현재 프래그먼트가 표시되는 컨테이너의 ID입니다.
+                    .addToBackStack(null) // 뒤로 가기 시 이전 프래그먼트로 돌아가기 위해 추가
+                    .commit()
+            }
+        }
         binding.menuRecycler.adapter = adapter
 
         loadMenuItems()
@@ -55,24 +63,20 @@ class MenuListFragment : BaseFragment() {
                         val category: String = document.getString("category") ?: ""
                         val name: String = document.getString("name") ?: ""
 
-                        // 새로운 카테고리가 나오면 헤더 추가
                         if (currentCategory != category) {
                             menuItems.add(MenuItem(MenuItem.TYPE_HEADER, category))
                             currentCategory = category
                         }
 
-                        // 메뉴 아이템 추가
                         menuItems.add(MenuItem(MenuItem.TYPE_ITEM, name))
                     }
                     adapter.notifyDataSetChanged()
-                } else {
-                    Log.w("Firestore", "Error getting documents.", task.exception)
                 }
             }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // 메모리 누수 방지
+        _binding = null
     }
 }
