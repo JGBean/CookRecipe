@@ -89,7 +89,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/MyProfile_Text">
 
-        <com.google.android.material.chip.Chip
+        <androidx.cardview.widget.CardView
             android:id="@+id/ProfileChip"
             android:layout_width="409dp"
             android:layout_height="195dp"
@@ -99,31 +99,34 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0">
 
-        <TextView
-            android:id="@+id/UserName_Text"
-            android:layout_width="185dp"
-            android:layout_height="45dp"
-            android:text="User_Name"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/UserName_Text"
+                android:layout_width="185dp"
+                android:layout_height="45dp"
+                android:text="User_Name"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/User_Image"
-            android:layout_width="98dp"
-            android:layout_height="98dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/ProfileChip"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            <ImageView
+                android:id="@+id/User_Image"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/ProfileChip"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View

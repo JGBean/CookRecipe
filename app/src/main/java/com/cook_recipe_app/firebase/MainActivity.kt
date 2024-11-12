@@ -14,6 +14,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 앱 시작 시 자동으로 RecipeFragment를 표시하도록 설정
+        if (savedInstanceState == null) {
+            // Fragment 전환: RecipeFragment를 처음에 표시
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, RecipeFragment())
+                .commit()
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
