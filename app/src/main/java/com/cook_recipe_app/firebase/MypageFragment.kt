@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+//import androidx.navigation.fragment.findNavController
 import com.cook_recipe_app.firebase.R
 import com.cook_recipe_app.firebase.databinding.FragmentMypageBinding
 
@@ -30,5 +31,8 @@ class MypageFragment : BaseFragment() {
                 .addToBackStack(null)
                 .commit()
         }
+        //binding?.ToFeatured?.setOnClickListener{
+            //findNavController().navigate(R.id.action_mypageFragment_to_featured)
+        //}
     }
 }
