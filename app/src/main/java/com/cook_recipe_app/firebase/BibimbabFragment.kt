@@ -38,6 +38,11 @@ class BibimbabFragment : Fragment() {
             }
         }
 
+        // 타이머 이미지 클릭 리스너 설정
+        binding.timer.setOnClickListener {
+            navigateToTimerFragment()
+        }
+
         // RecyclerView 설정
         binding.bibimbabRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -77,5 +82,13 @@ class BibimbabFragment : Fragment() {
                 // 오류 처리
                 Log.w("BibimbabFragment", "Error getting documents: ", exception)
             }
+    }
+
+    private fun navigateToTimerFragment() {
+        val timerFragment = TimerFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, timerFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
