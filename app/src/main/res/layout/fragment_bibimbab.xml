@@ -19,12 +19,12 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/bibimbab_title"
+        android:id="@+id/menu_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="비빔밥"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -40,7 +40,7 @@
         android:src="@drawable/ic_timer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.328"
-        app:layout_constraintStart_toEndOf="@+id/bibimbab_title"
+        app:layout_constraintStart_toEndOf="@+id/menu_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -60,7 +60,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bibimbabRecyclerView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
