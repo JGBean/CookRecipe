@@ -1,55 +1,86 @@
 package com.cook_recipe_app.firebase
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
+import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import com.cook_recipe_app.firebase.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 앱 시작 시 자동으로 RecipeFragment를 표시하도록 설정
-        if (savedInstanceState == null) {
-            // Fragment 전환: RecipeFragment를 처음에 표시
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, RecipeFragment())
-                .commit()
-        }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // binding을 사용해 BottomNavigationView에 리스너 설정
+        handleNavigationIntent(intent)
+
+        setupImageViewClickListener()
+        setupBottomNavigationView()
+        setupOnBackPressedCallback()
+    }
+
+    private fun setupImageViewClickListener() {
+        findViewById<ImageView>(R.id.imageView).setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupBottomNavigationView() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             val selectedFragment: Fragment = when (item.itemId) {
                 R.id.nav_recipe -> RecipeFragment()
                 R.id.nav_community -> CommunityFragment()
                 R.id.nav_user -> MypageFragment()
-                else -> RecipeFragment()  // 기본 선택
+                else -> RecipeFragment()
             }
-            // Fragment 전환
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, selectedFragment).commit()
-
-            true // 아이템 선택이 처리되었음을 나타냄
+            navigateToFragment(selectedFragment)
+            true
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_bottom, menu)
-        return true
+    private fun setupOnBackPressedCallback() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                } else {
+                    finish()
+                }
+            }
+        })
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleNavigationIntent(intent)
+    }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp() || super.onSupportNavigateUp()
+    private fun handleNavigationIntent(intent: Intent?) {
+        val menuId = intent?.getStringExtra("menuId")
+        val menuName = intent?.getStringExtra("menuName")
+
+        if (menuId != null && menuName != null) {
+            val fragment = BibimbabFragment().apply {
+                arguments = Bundle().apply {
+                    putString("menuId", menuId)
+                    putString("menuName", menuName)
+                }
+            }
+            navigateToFragment(fragment)
+        } else if (supportFragmentManager.fragments.isEmpty()) {
+            navigateToFragment(RecipeFragment())
+        }
+    }
+
+    fun navigateToFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

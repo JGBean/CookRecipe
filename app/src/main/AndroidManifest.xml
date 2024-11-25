@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Cookrecipeapp"
         tools:targetApi="31">
         <activity
+            android:name=".SearchActivity"
+            android:exported="true" />
+        <activity
             android:name=".CommunityPostActivity"
             android:exported="true" />
         <activity

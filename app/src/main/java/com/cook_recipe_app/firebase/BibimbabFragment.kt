@@ -97,10 +97,7 @@ class BibimbabFragment : Fragment() {
 
     private fun navigateToTimerFragment() {
         val timerFragment = TimerFragment()
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, timerFragment)
-            .addToBackStack(null)
-            .commit()
+        (activity as? MainActivity)?.navigateToFragment(timerFragment)
     }
 }
 
