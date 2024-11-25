@@ -93,6 +93,7 @@ class BibimbabFragment : Fragment() {
                 Log.w("BibimbabFragment", "Error getting documents: ", exception)
             }
 
+
     }
 
     private fun navigateToTimerFragment() {
