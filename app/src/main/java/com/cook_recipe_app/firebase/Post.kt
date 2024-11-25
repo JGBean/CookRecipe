@@ -4,5 +4,5 @@ data class Post(
     val id: String = "",
     val title: String = "",
     val content: String ="",
-    val timestamp: Long = System.currentTimeMillis()  // 기본값 설정
+    val timestamp: Long = System.currentTimeMillis()
 )
