@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cook_recipe_app.firebase.databinding.FragmentBibimbabBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class BibimbabFragment : Fragment() {
@@ -28,14 +29,22 @@ class BibimbabFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // menuId 한 번만 선언하고, null 처리
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return // 로그인하지 않은 경우 처리
+        val menuId = arguments?.getString("menuId") ?: return
+        val likeDocId = "${userId}_$menuId"
+
         // 좋아요 버튼 설정
         val likeButton: ImageView = binding.likeButton
         likeButton.setOnClickListener {
             isLiked = !isLiked
             if (isLiked) {
                 likeButton.setImageResource(R.drawable.ic_heart_full)
+                addToLikesCollection(userId, menuId, likeDocId)  // 좋아요 추가
             } else {
                 likeButton.setImageResource(R.drawable.ic_heart_empty)
+                removeFromLikesCollection(likeDocId)  // 좋아요 제거
             }
         }
 
@@ -45,7 +54,6 @@ class BibimbabFragment : Fragment() {
         }
 
         // Firebase에서 데이터 가져오기
-        val menuId = arguments?.getString("menuId") ?: return@onViewCreated
         Log.d("BibimbabFragment", "menuId: $menuId")
         db.collection("recipes").document(menuId)  // 메뉴 ID로 문서 가져오기
             .get()
@@ -80,20 +88,41 @@ class BibimbabFragment : Fragment() {
                             LinearLayoutManager(requireContext())
                         binding.bibimbabRecyclerView.adapter = BibimbabAdapter(allItems)
                     }
-
-                        // Adapter 설정
-                    val adapter = BibimbabAdapter(allItems)
-                    binding.bibimbabRecyclerView.adapter = adapter
-                    binding.bibimbabRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-                    binding.bibimbabRecyclerView.adapter = BibimbabAdapter(allItems)
                 }
             }
             .addOnFailureListener { exception ->
                 // 오류 처리
                 Log.w("BibimbabFragment", "Error getting documents: ", exception)
             }
+    }
 
 
+    private fun addToLikesCollection(userId: String, menuId: String, docId: String) {
+        val likeData = mapOf(
+            "userId" to userId,
+            "menuId" to menuId,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        db.collection("likes").document(docId)
+            .set(likeData)
+            .addOnSuccessListener {
+                Log.d("BibimbabFragment", "Successfully added to likes: $docId")
+            }
+            .addOnFailureListener { e ->
+                Log.e("BibimbabFragment", "Error adding to likes: $docId", e)
+            }
+    }
+
+    private fun removeFromLikesCollection(docId: String) {
+        db.collection("likes").document(docId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d("BibimbabFragment", "Successfully removed from likes: $docId")
+            }
+            .addOnFailureListener { e ->
+                Log.e("BibimbabFragment", "Error removing from likes: $docId", e)
+            }
     }
 
     private fun navigateToTimerFragment() {
