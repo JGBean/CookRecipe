@@ -1,52 +1,98 @@
-package com.cook_recipe_app.firebase.ui;
+package com.cook_recipe_app.firebase.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class BibimbabViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
 
-    // 데이터 변경을 감지할 수 있는 LiveData 변수
-    private val _bibimbabData = MutableLiveData<List<String>>()
-    val bibimbabData: LiveData<List<String>> get() = _bibimbabData
+    private val _menuTitle = MutableLiveData<String>()
+    val menuTitle: LiveData<String> get() = _menuTitle
+    //LiveData : 관찰 가능한 데이터 홀더 클래스 (읽기 전용)
+    private val _menuItems = MutableLiveData<List<String>>()
+    val menuItems: LiveData<List<String>> get() = _menuItems
+    //MutableLiveData : LiveData를 확장. 데이터 변경 가능함.
+    private val _isLiked = MutableLiveData<Boolean>()
+    val isLiked: LiveData<Boolean> get() = _isLiked
 
-    // Firebase에서 데이터를 가져오는 함수
-    fun loadBibimbabData() {
-        db.collection("recipes").document("bibimbab")
+    private val _userId = MutableLiveData<String>()
+    val userId: LiveData<String> get() = _userId
+
+    fun fetchMenuData(menuId: String) {
+        db.collection("recipes").document(menuId)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    // Firestore에서 데이터를 가져와 리스트로 변환
-                    val ingredients = document.get("ingredients") as List<String>
-                    val seasoning = document.get("seasoning") as List<String>
-                    val cookingSteps = listOf(
-                        document.getString("bibimbab_cooking1"),
-                        document.getString("bibimbab_cooking2"),
-                        document.getString("bibimbab_cooking3"),
-                        document.getString("bibimbab_cooking4"),
-                        document.getString("bibimbab_cooking5"),
-                        document.getString("bibimbab_cooking6"),
-                        document.getString("bibimbab_cooking7")
-                    ).filterNotNull()
+                    _menuTitle.value = document.getString("name") ?: "Unknown"
 
-                    // 모든 데이터를 하나의 리스트로 합침
-                    val allItems = mutableListOf<String>()
-                    allItems.add("재료")
-                    allItems.addAll(ingredients)
-                    allItems.add("양념장")
-                    allItems.addAll(seasoning)
-                    allItems.add("요리 방법")
-                    allItems.addAll(cookingSteps)
+                    val ingredients = document.get("ingredients") as? List<String> ?: emptyList()
+                    val seasoning = document.get("seasoning") as? List<String> ?: emptyList()
+                    val steps = document.get("steps") as? List<String> ?: emptyList()
 
-                    // 데이터를 LiveData에 저장
-                    _bibimbabData.value = allItems
+                    val allItems = mutableListOf<String>().apply {
+                        add("재료")
+                        addAll(ingredients)
+                        add("양념장")
+                        addAll(seasoning)
+                        add("요리 방법")
+                        addAll(steps)
+                    }
+
+                    _menuItems.value = allItems
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.w("BibimbabViewModel", "Error getting documents: ", exception)
+    }
+
+    fun fetchUserId() {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            db.collection("user").document(user.uid)
+                .get()
+                .addOnSuccessListener { document ->
+                    _userId.value = document.getString("id")?: ""
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("BibimbabViewModel", "Error fetching user ID", exception)
+                }
+        }
+    }
+
+    fun toggleLike(menuId: String) {
+        val currentUserId = _userId.value ?: return
+        val likeDocId = "${currentUserId}_$menuId"
+
+        if (_isLiked.value == true) {
+            db.collection("likes").document(likeDocId).delete()
+                .addOnSuccessListener { _isLiked.value = false }
+                .addOnFailureListener { exception ->
+                    Log.e("BibimbabViewModel", "Error unliking", exception)
+                }
+        } else {
+            val likeData = mapOf(
+                "userId" to currentUserId,
+                "menuId" to menuId,
+                "timestamp" to System.currentTimeMillis()
+            )
+            db.collection("likes").document(likeDocId).set(likeData)
+                .addOnSuccessListener { _isLiked.value = true }
+                .addOnFailureListener { exception ->
+                    Log.e("BibimbabViewModel", "Error liking", exception)
+                }
+        }
+    }
+
+    fun checkIsLiked(menuId: String) {
+        val currentUserId = _userId.value ?: return
+        val likeDocId = "${currentUserId}_$menuId"
+
+        db.collection("likes").document(likeDocId)
+            .get()
+            .addOnSuccessListener { document ->
+                _isLiked.value = document.exists()
             }
     }
 }

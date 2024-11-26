@@ -7,9 +7,15 @@ import com.cook_recipe_app.firebase.databinding.MenuHeaderBinding
 import com.cook_recipe_app.firebase.databinding.MenuListBinding
 
 class MenuAdapter(
-    private val menuItems: List<MenuItem>,
+    private var menuItems: List<MenuItem>,
     private val onItemClick: (MenuItem) -> Unit // 클릭 리스너 추가
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    // 데이터 갱신 메서드
+    fun updateData(newMenuItems: List<MenuItem>) {
+        menuItems = newMenuItems
+        notifyDataSetChanged()
+    }
 
     // ViewHolder for Header
     inner class HeaderViewHolder(private val binding: MenuHeaderBinding) : RecyclerView.ViewHolder(binding.root) {

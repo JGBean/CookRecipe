@@ -1,22 +1,22 @@
 package com.cook_recipe_app.firebase
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cook_recipe_app.firebase.databinding.FragmentMenuListBinding
-import com.google.firebase.firestore.FirebaseFirestore
+import com.cook_recipe_app.firebase.viewmodel.MenuListViewModel
 
 class MenuListFragment : Fragment() {
     private var _binding: FragmentMenuListBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: MenuAdapter
-    private val menuItems: MutableList<MenuItem> = mutableListOf()  // 여기서 menuItems 초기화
-    private lateinit var db: FirebaseFirestore
+    private val viewModel: MenuListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -32,8 +32,7 @@ class MenuListFragment : Fragment() {
         binding.menuRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         // 어댑터 초기화
-        adapter = MenuAdapter(menuItems) { menuItem ->
-            // 메뉴 항목 클릭 시 처리
+        adapter = MenuAdapter(emptyList()) { menuItem ->
             if (menuItem.type == MenuItem.TYPE_ITEM) {
                 val bibimbabFragment = BibimbabFragment()
                 val bundle = Bundle()
@@ -48,37 +47,13 @@ class MenuListFragment : Fragment() {
         }
         binding.menuRecycler.adapter = adapter
 
-        // Firebase 초기화
-        db = FirebaseFirestore.getInstance()
-        loadMenuItems()
-    }
+        // LiveData 구독
+        viewModel.menuItems.observe(viewLifecycleOwner, Observer { items ->
+            adapter.updateData(items)
+        })
 
-    private fun loadMenuItems() {
-        db.collection("menuItems")
-            .orderBy("category")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    menuItems.clear()
-                    var currentCategory = ""
-                    for (document in task.result) {
-                        val category: String = document.getString("category") ?: ""
-                        val name: String = document.getString("name") ?: ""
-                        val id: String = document.id  // 메뉴 아이디
-
-                        // 카테고리별로 구분
-                        if (currentCategory != category) {
-                            menuItems.add(MenuItem(MenuItem.TYPE_HEADER, category))
-                            currentCategory = category
-                        }
-
-                        menuItems.add(MenuItem(MenuItem.TYPE_ITEM, name, id))  // 메뉴 이름과 ID 추가
-                    }
-                    adapter.notifyDataSetChanged()
-                } else {
-                    Log.e("MenuListFragment", "Error loading menu items", task.exception)
-                }
-            }
+        // 데이터 로드
+        viewModel.loadMenuItems()
     }
 
     override fun onDestroyView() {
