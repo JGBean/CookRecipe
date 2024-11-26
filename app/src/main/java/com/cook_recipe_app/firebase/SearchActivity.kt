@@ -3,7 +3,6 @@ package com.cook_recipe_app.firebase
 import android.content.Intent
 import android.os.Bundle
 import android.widget.SearchView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cook_recipe_app.firebase.databinding.ActivitySearchBinding
@@ -21,7 +20,7 @@ class SearchActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupSearchView()
-        setupBackPressedCallback()
+
     }
 
     private fun setupRecyclerView() {
@@ -43,14 +42,6 @@ class SearchActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let { adapter.filter(it) }
                 return true
-            }
-        })
-    }
-
-    private fun setupBackPressedCallback() {
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
             }
         })
     }

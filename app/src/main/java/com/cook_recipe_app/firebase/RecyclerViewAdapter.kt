@@ -46,7 +46,7 @@ class RecyclerViewAdapter(
             filteredMenuItems.addAll(allMenuItems)
         } else {
             filteredMenuItems.addAll(allMenuItems.filter {
-                it.name.contains(query, ignoreCase = true)
+                it.name.contains(query)
             })
         }
         notifyDataSetChanged()

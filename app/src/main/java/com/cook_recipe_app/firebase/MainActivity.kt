@@ -3,7 +3,6 @@ package com.cook_recipe_app.firebase
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.cook_recipe_app.firebase.databinding.ActivityMainBinding
@@ -20,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         setupImageViewClickListener()
         setupBottomNavigationView()
-        setupOnBackPressedCallback()
+
     }
 
     private fun setupImageViewClickListener() {
@@ -41,18 +40,6 @@ class MainActivity : AppCompatActivity() {
             navigateToFragment(selectedFragment)
             true
         }
-    }
-
-    private fun setupOnBackPressedCallback() {
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (supportFragmentManager.backStackEntryCount > 0) {
-                    supportFragmentManager.popBackStack()
-                } else {
-                    finish()
-                }
-            }
-        })
     }
 
     override fun onNewIntent(intent: Intent) {
