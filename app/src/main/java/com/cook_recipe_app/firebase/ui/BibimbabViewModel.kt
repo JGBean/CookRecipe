@@ -50,16 +50,22 @@ class BibimbabViewModel : ViewModel() {
     fun fetchUserId() {
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
-            db.collection("user").document(user.uid)
+            // 현재 사용자의 UID를 사용하여 'users' 컬렉션에서 해당 문서를 찾음
+            db.collection("users").document(user.uid)
                 .get()
                 .addOnSuccessListener { document ->
-                    _userId.value = document.getString("id")?: ""
+                    if (document.exists()) {
+                        _userId.value = document.getString("id") ?: ""
+                    } else {
+                        Log.e("BibimbabViewModel", "사용자 문서를 찾을 수 없음")
+                    }
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("BibimbabViewModel", "Error fetching user ID", exception)
+                    Log.e("BibimbabViewModel", "사용자 ID를 가져오는 중 오류 발생", exception)
                 }
         }
     }
+
 
     fun toggleLike(menuId: String) {
         val currentUserId = _userId.value ?: return
