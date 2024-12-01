@@ -8,7 +8,7 @@ import com.cook_recipe_app.firebase.ui.CommunityViewModel
 
 class CommunityPostActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCommunityPostBinding
-    private val viewModel: CommunityViewModel by viewModels()
+    private val viewModel: CommunityViewModel by viewModels() // viewModels()에 관리를 위임
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +25,10 @@ class CommunityPostActivity : AppCompatActivity() {
                     finish() // 게시글 작성 후 종료
                 }
             }
+        }
+
+        binding.imbBack.setOnClickListener() {
+            finish() // 뒤로가기 버튼
         }
     }
 }

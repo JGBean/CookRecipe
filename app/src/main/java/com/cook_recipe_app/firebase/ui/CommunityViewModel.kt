@@ -9,12 +9,12 @@ import com.google.firebase.firestore.Query
 
 class CommunityViewModel : ViewModel() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val _postList = MutableLiveData<List<Post>>()
-    val postList: LiveData<List<Post>> get() = _postList
+    private val _postList = MutableLiveData<List<Post>>() // ViewModel 내부에서 내용을 수정하거나 갱신할 때의 변수
+    val postList: LiveData<List<Post>> get() = _postList // _postList의 내용을 받아서 외부에 표시하는 변수
 
     fun fetchPosts() {
         db.collection("posts")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .orderBy("timestamp", Query.Direction.DESCENDING) // 최신 순으로 정렬
             .get()
             .addOnSuccessListener { documents ->
                 val posts = documents.map { document ->

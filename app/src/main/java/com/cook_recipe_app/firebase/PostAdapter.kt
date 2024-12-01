@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PostAdapter(private val postList: List<Post>, private val context: Context) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(private val postList: List<Post>, private val context: Context, private val onPostClick: (Post) -> Unit) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.txt_title)
 
         fun bind(post: Post) {
             titleTextView.text = post.title
+            itemView.setOnClickListener{
+                onPostClick(post)
+            }
         }
     }
 

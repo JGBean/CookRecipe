@@ -34,6 +34,14 @@
         android:id="@+id/communityFragment"
         android:name="com.cook_recipe_app.firebase.CommunityFragment"
         android:label="fragment_community"
-        tools:layout="@layout/fragment_community" />
+        tools:layout="@layout/fragment_community" >
+        <action
+            android:id="@+id/action_communityFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.cook_recipe_app.firebase.PostDetailFragment"
+        android:label="PostDetailFragment" />
 
 </navigation>
