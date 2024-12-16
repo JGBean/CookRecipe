@@ -5,13 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cook_recipe_app.firebase.databinding.FragmentFeaturedrecyclerBinding
 
-class featuredAdapter(private var bookmarkedItems: List<featuredItem>) :
-    RecyclerView.Adapter<featuredAdapter.Holder>() {
+class featuredAdapter(
+    private var bookmarkedItems: List<featuredItem>,
+    private val onItemClicked: (String) -> Unit // 클릭 이벤트 콜백
+) : RecyclerView.Adapter<featuredAdapter.Holder>() {
 
     class Holder(private val binding: FragmentFeaturedrecyclerBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: featuredItem) {
+        fun bind(item: featuredItem, onClick: (String) -> Unit) {
             binding.featuredName.text = item.item
+            binding.root.setOnClickListener { onClick(item.item) } // 클릭 이벤트 전달
         }
     }
 
@@ -21,14 +24,13 @@ class featuredAdapter(private var bookmarkedItems: List<featuredItem>) :
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(bookmarkedItems[position])
+        holder.bind(bookmarkedItems[position], onItemClicked)
     }
 
     override fun getItemCount(): Int {
         return bookmarkedItems.size
     }
 
-    // 데이터 갱신 메서드
     fun updateData(newItems: List<featuredItem>) {
         bookmarkedItems = newItems
         notifyDataSetChanged()
