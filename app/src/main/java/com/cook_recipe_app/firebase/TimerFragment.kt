@@ -66,40 +66,43 @@ class TimerFragment : BaseFragment() {
         }
     }
 
-    private fun setupButtons() { // 버튼 설정 메서드
-        binding.startButton.setOnClickListener { // 시작/일시정지 버튼 클릭 리스너 설정
-            when {
-                viewModel.isRunning.value == true -> viewModel.pauseTimer() // 실행 중이면 일시정지
-                viewModel.timeLeft.value != viewModel.totalTime.value -> viewModel.resumeTimer() // 일시정지 상태면 재개
-                else -> viewModel.startTimer() // 그 외의 경우 시작
+    private fun observeViewModel() {
+        viewModel.timeLeft.observe(viewLifecycleOwner) { seconds ->
+            updateTimerDisplay(seconds)
+            updateProgress(seconds)
+            if (seconds == 0 && viewModel.isRunning.value == true) {
+                showTimeUpDialog()
+                viewModel.stopTimer() // 타이머 종료 시 자동으로 정지
             }
         }
 
-        binding.resetButton.setOnClickListener { // 리셋 버튼 클릭 리스너 설정
-            viewModel.stopTimer() // 타이머 정지
-        }
-    }
-
-    private fun observeViewModel() { // ViewModel 관찰 메서드
-        viewModel.timeLeft.observe(viewLifecycleOwner) { seconds -> // 남은 시간 관찰
-            updateTimerDisplay(seconds) // 타이머 디스플레이 업데이트
-            updateProgress(seconds) // 진행 상황 업데이트
-            if (seconds == 0 && viewModel.isRunning.value == true) { // 시간이 다 되면
-                showTimeUpDialog() // 다이얼로그 표시
-            }
-        }
-
-        viewModel.isRunning.observe(viewLifecycleOwner) { isRunning -> // 타이머 실행 상태 관찰
-            binding.startButton.text = when { // 버튼 텍스트 업데이트
+        viewModel.isRunning.observe(viewLifecycleOwner) { isRunning ->
+            binding.startButton.text = when {
                 isRunning -> "Pause"
+                viewModel.totalTime.value != null && viewModel.timeLeft.value == 0 -> "Start"
                 viewModel.timeLeft.value != viewModel.totalTime.value -> "Resume"
                 else -> "Start"
             }
         }
 
-        viewModel.showTimePickerView.observe(viewLifecycleOwner) { showPicker -> // TimePicker 표시 여부 관찰
-            binding.timePickerGroup.visibility = if (showPicker) View.VISIBLE else View.GONE // TimePicker 그룹 가시성 설정
-            binding.progressGroup.visibility = if (showPicker) View.GONE else View.VISIBLE // 진행 상황 그룹 가시성 설정
+        viewModel.showTimePickerView.observe(viewLifecycleOwner) { showPicker ->
+            binding.timePickerGroup.visibility = if (showPicker) View.VISIBLE else View.GONE
+            binding.progressGroup.visibility = if (showPicker) View.GONE else View.VISIBLE
+        }
+    }
+
+    private fun setupButtons() {
+        binding.startButton.setOnClickListener {
+            when {
+                viewModel.isRunning.value == true -> viewModel.pauseTimer()
+                viewModel.timeLeft.value == 0 -> viewModel.startTimer()
+                viewModel.timeLeft.value != viewModel.totalTime.value -> viewModel.resumeTimer()
+                else -> viewModel.startTimer()
+            }
+        }
+
+        binding.resetButton.setOnClickListener {
+            viewModel.stopTimer()
         }
     }
 
