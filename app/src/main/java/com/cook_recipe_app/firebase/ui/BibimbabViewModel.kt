@@ -4,8 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class BibimbabViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -21,6 +27,9 @@ class BibimbabViewModel : ViewModel() {
 
     private val _userId = MutableLiveData<String>()
     val userId: LiveData<String> get() = _userId
+
+    private val _imageUrl = MutableLiveData<String>()
+    val imageUrl: LiveData<String> get() = _imageUrl
 
     fun fetchMenuData(menuId: String) {
         db.collection("recipes").document(menuId)
@@ -64,6 +73,12 @@ class BibimbabViewModel : ViewModel() {
                     Log.e("BibimbabViewModel", "사용자 ID를 가져오는 중 오류 발생", exception)
                 }
         }
+    }
+
+    fun fetchImageUrl(menuId: String) {
+        val imageUrl = "https://firebasestorage.googleapis.com/v0/b/cook-recipe-app.firebasestorage.app/o/image%2F$menuId.png?alt=media&token=f78a262c-46ee-4528-be20-928883445b5d"
+
+        _imageUrl.value = imageUrl
     }
 
 

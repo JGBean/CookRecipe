@@ -9,8 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.cook_recipe_app.firebase.databinding.FragmentBibimbabBinding
 import com.cook_recipe_app.firebase.viewmodel.BibimbabViewModel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+
 
 class BibimbabFragment : Fragment() {
     private var _binding: FragmentBibimbabBinding? = null
@@ -66,11 +70,29 @@ class BibimbabFragment : Fragment() {
             binding.bibimbabRecyclerView.adapter = BibimbabAdapter(items)
         }
 
+        // 메뉴 이미지 가져오기
+        viewModel.fetchImageUrl(menuId) // 이미지 URL을 가져오기 위해 호출
+        viewModel.imageUrl.observe(viewLifecycleOwner) { imageUrl ->
+            Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.placeholder)  // 이미지를 로드하기 전에 보여줄 기본 이미지
+                .error(R.drawable.ic_user)  // 에러 발생 시 대체 이미지
+                .into(binding.menuImage)  // 이미지를 실제 ImageView에 표시
+        }
+
+        viewModel.userId.observe(viewLifecycleOwner) { userId ->
+            if (userId != null) {
+                viewModel.checkIsLiked(menuId) // 메뉴 좋아요 상태 확인
+            }
+        }
+
         // 타이머 버튼 클릭 리스너
         binding.timer.setOnClickListener {
             navigateToTimerFragment()
         }
+
     }
+
 
     private fun navigateToTimerFragment() {
         val timerFragment = TimerFragment()
