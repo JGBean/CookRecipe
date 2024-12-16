@@ -1,57 +1,68 @@
 package com.cook_recipe_app.firebase
 
-
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.cook_recipe_app.firebase.R
+import com.bumptech.glide.Glide
 import com.cook_recipe_app.firebase.databinding.IngredientListBinding
+import com.cook_recipe_app.firebase.databinding.MenuImageItemBinding
 
 class BibimbabAdapter(
-    private val items: List<String>
-) : RecyclerView.Adapter<BibimbabAdapter.BibimbabViewHolder>() {
+    private val imageUrl: String, // 요리 이미지 URL
+    private val items: List<IngredientItem> // 재료 리스트
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibimbabViewHolder {
-        val binding = IngredientListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return BibimbabViewHolder(binding)
+    companion object {
+        private const val VIEW_TYPE_IMAGE = 0
+        private const val VIEW_TYPE_INGREDIENT = 1
     }
 
-    override fun onBindViewHolder(holder: BibimbabViewHolder, position: Int) {
-        val item = items[position]
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) VIEW_TYPE_IMAGE else VIEW_TYPE_INGREDIENT
+    }
 
-        // 텍스트 스타일 설정
-        holder.bind(item) // 기본 바인딩 작업
-        if (item == "재료" || item == "양념장" || item == "요리 방법") {
-            holder.setBoldText() // 굵은 텍스트 설정
-        } else {
-            holder.setNormalText() // 일반 텍스트 설정
+    override fun getItemCount(): Int {
+        return items.size + 1 // 이미지 1개 + 재료 리스트 크기
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_IMAGE -> {
+                val binding = MenuImageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ImageViewHolder(binding)
+            }
+            VIEW_TYPE_INGREDIENT -> {
+                val binding = IngredientListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                BibimbabViewHolder(binding)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
-    // 뷰 홀더 클래스 수정
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (position == 0 && holder is ImageViewHolder) {
+            holder.bind(imageUrl) // 첫 번째 아이템에 이미지 URL 바인딩
+        } else if (position > 0 && holder is BibimbabViewHolder) {
+            val item = items[position - 1] // 첫 번째 아이템이 이미지이므로 인덱스 보정
+            holder.bind(item)
+        }
+    }
+
+    // 요리 이미지 ViewHolder
+    inner class ImageViewHolder(private val binding: MenuImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(imageUrl: String) {
+            Glide.with(binding.root.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.placeholder) // 기본 이미지
+                .error(R.drawable.ic_user) // 에러 시 대체 이미지
+                .into(binding.menuImageView)
+        }
+    }
+
+    // 재료 리스트 ViewHolder
     inner class BibimbabViewHolder(private val binding: IngredientListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String) {
-            binding.itemTextView.text = item
-        }
-
-        // 텍스트를 굵게 설정하는 메서드
-        fun setBoldText() {
-            binding.itemTextView.setTypeface(null, android.graphics.Typeface.BOLD)
-        }
-
-        // 텍스트를 일반 스타일로 설정하는 메서드
-        fun setNormalText() {
-            binding.itemTextView.setTypeface(null, android.graphics.Typeface.NORMAL)
+        fun bind(item: IngredientItem) {
+            binding.itemTextView.text = item.name
         }
     }
-
-
-    override fun getItemCount(): Int = items.size
-
-
 }
-
-

@@ -65,24 +65,19 @@ class BibimbabFragment : Fragment() {
             binding.menuTitle.text = title
         }
 
-        viewModel.menuItems.observe(viewLifecycleOwner) { items ->
-            binding.bibimbabRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            binding.bibimbabRecyclerView.adapter = BibimbabAdapter(items)
-        }
-
-        // 메뉴 이미지 가져오기
+        // 메뉴 이미지 및 아이템 데이터 설정
         viewModel.fetchImageUrl(menuId) // 이미지 URL을 가져오기 위해 호출
         viewModel.imageUrl.observe(viewLifecycleOwner) { imageUrl ->
-            Glide.with(this)
-                .load(imageUrl)
-                .placeholder(R.drawable.placeholder)  // 이미지를 로드하기 전에 보여줄 기본 이미지
-                .error(R.drawable.ic_user)  // 에러 발생 시 대체 이미지
-                .into(binding.menuImage)  // 이미지를 실제 ImageView에 표시
-        }
+            viewModel.menuItems.observe(viewLifecycleOwner) { items ->
+                // List<String>을 List<IngredientItem>으로 변환
+                val ingredientItems = items.map { IngredientItem(it) }
 
-        viewModel.userId.observe(viewLifecycleOwner) { userId ->
-            if (userId != null) {
-                viewModel.checkIsLiked(menuId) // 메뉴 좋아요 상태 확인
+                // 이미지를 가져오는 URL
+                val imageUrl = viewModel.imageUrl.value.orEmpty() // 이미지 URL 가져오기
+
+                // 어댑터 설정
+                binding.bibimbabRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.bibimbabRecyclerView.adapter = BibimbabAdapter(imageUrl, ingredientItems)
             }
         }
 
@@ -90,9 +85,7 @@ class BibimbabFragment : Fragment() {
         binding.timer.setOnClickListener {
             navigateToTimerFragment()
         }
-
     }
-
 
     private fun navigateToTimerFragment() {
         val timerFragment = TimerFragment()
@@ -107,4 +100,5 @@ class BibimbabFragment : Fragment() {
         _binding = null
     }
 }
+
 
