@@ -43,7 +43,7 @@ class BibimbabAdapter(
         if (position == 0 && holder is ImageViewHolder) {
             holder.bind(imageUrl) // 첫 번째 아이템에 이미지 URL 바인딩
         } else if (position > 0 && holder is BibimbabViewHolder) {
-            val item = items[position - 1] // 첫 번째 아이템이 이미지이므로 인덱스 보정
+            val item = items[position - 1].name // 첫 번째 아이템이 이미지이므로 인덱스 보정
             holder.bind(item)
         }
     }
@@ -61,8 +61,15 @@ class BibimbabAdapter(
 
     // 재료 리스트 ViewHolder
     inner class BibimbabViewHolder(private val binding: IngredientListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: IngredientItem) {
-            binding.itemTextView.text = item.name
+        fun bind(item: String) {
+            binding.itemTextView.text = item
+
+            // Bold 처리 조건 (제목과 관련된 항목에 대해)
+            if (item == "재료" || item == "양념장" || item == "요리 방법") {
+                binding.itemTextView.setTypeface(null, android.graphics.Typeface.BOLD)
+            } else {
+                binding.itemTextView.setTypeface(null, android.graphics.Typeface.NORMAL)
+            }
         }
     }
 }
