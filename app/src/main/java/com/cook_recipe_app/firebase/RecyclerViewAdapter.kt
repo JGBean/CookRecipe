@@ -5,28 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
 
-class RecyclerViewAdapter(
-    firestore: FirebaseFirestore,
+class MenuRecyclerViewAdapter(
     private val navigateToMainActivity: (String, String) -> Unit
-) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MenuRecyclerViewAdapter.ViewHolder>() {
 
-    private val allMenuItems = mutableListOf<Menu>()
-    private val filteredMenuItems = mutableListOf<Menu>()
+    private var menuItems: List<Menu> = listOf()
 
-    init {
-        firestore.collection("menuItems").addSnapshotListener { querySnapshot, _ ->
-            allMenuItems.clear()
-            querySnapshot?.documents?.mapNotNull {
-                it.toObject(Menu::class.java)?.apply { id = it.id }
-            }?.let {
-                allMenuItems.addAll(it)
-                filteredMenuItems.clear()
-                filteredMenuItems.addAll(it)
-            }
-            notifyDataSetChanged()
-        }
+    fun updateItems(newItems: List<Menu>) {
+        menuItems = newItems
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,23 +24,11 @@ class RecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val menuItem = filteredMenuItems[position]
+        val menuItem = menuItems[position]
         holder.bind(menuItem)
     }
 
-    fun filter(query: String) {
-        filteredMenuItems.clear()
-        if (query.isEmpty()) {
-            filteredMenuItems.addAll(allMenuItems)
-        } else {
-            filteredMenuItems.addAll(allMenuItems.filter {
-                it.name.contains(query)
-            })
-        }
-        notifyDataSetChanged()
-    }
-
-    override fun getItemCount() = filteredMenuItems.size
+    override fun getItemCount() = menuItems.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val nameTextView: TextView = view.findViewById(R.id.name)
