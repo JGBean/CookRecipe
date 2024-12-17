@@ -100,5 +100,3 @@ class BibimbabFragment : Fragment() {
         _binding = null
     }
 }
-
-

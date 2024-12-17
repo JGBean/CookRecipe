@@ -1,7 +1,18 @@
 package com.cook_recipe_app.firebase
 
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cook_recipe_app.firebase.databinding.IngredientListBinding
@@ -62,7 +73,47 @@ class BibimbabAdapter(
     // 재료 리스트 ViewHolder
     inner class BibimbabViewHolder(private val binding: IngredientListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String) {
-            binding.itemTextView.text = item
+            // 강조 처리: 시간 관련 패턴 감지
+            val spannable = SpannableString(item)
+            val timePattern = Regex("(\\d+시간|\\d+분)")
+
+            timePattern.findAll(item).forEach { matchResult ->
+                val start = matchResult.range.first
+                val end = matchResult.range.last + 1
+
+                // 클릭 이벤트 추가
+                spannable.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        navigateToTimerFragment() // 타이머 프래그먼트로 이동
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = false // 밑줄 제거
+                        ds.color = Color.BLUE // 텍스트 색상 변경 (선택 사항)
+                    }
+                }, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                // 스타일 강조 (예: 굵게 및 색상 변경)
+                spannable.setSpan(
+                    StyleSpan(Typeface.BOLD), // 굵게
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                spannable.setSpan(
+                    ForegroundColorSpan(Color.BLUE), // 빨간색
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+            // 텍스트 설정
+            binding.itemTextView.text = spannable
+
+            // 클릭 이벤트 활성화
+            binding.itemTextView.movementMethod = LinkMovementMethod.getInstance()
 
             // Bold 처리 조건 (제목과 관련된 항목에 대해)
             if (item == "재료" || item == "양념장" || item == "요리 방법") {
@@ -70,6 +121,14 @@ class BibimbabAdapter(
             } else {
                 binding.itemTextView.setTypeface(null, android.graphics.Typeface.NORMAL)
             }
+        }
+
+        private fun navigateToTimerFragment() {
+            val timerFragment = TimerFragment()
+            (binding.root.context as? FragmentActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, timerFragment)
+                ?.addToBackStack(null)
+                ?.commit()
         }
     }
 }
