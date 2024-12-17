@@ -1,16 +1,23 @@
 package com.cook_recipe_app.firebase
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ClickableSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.util.Log
+import androidx.core.text.set
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.cook_recipe_app.firebase.databinding.FragmentBibimbabBinding
+import com.cook_recipe_app.firebase.ui.TimerViewModel
 import com.cook_recipe_app.firebase.viewmodel.BibimbabViewModel
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -21,6 +28,8 @@ class BibimbabFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: BibimbabViewModel by viewModels()
+
+    private val timerViewModel: TimerViewModel by activityViewModels() // TimerViewModel 가져오기
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -86,6 +95,7 @@ class BibimbabFragment : Fragment() {
             navigateToTimerFragment()
         }
     }
+
 
     private fun navigateToTimerFragment() {
         val timerFragment = TimerFragment()
