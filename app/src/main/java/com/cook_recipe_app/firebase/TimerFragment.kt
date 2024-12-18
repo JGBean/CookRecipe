@@ -11,6 +11,18 @@ import com.cook_recipe_app.firebase.databinding.FragmentTimerBinding
 import java.util.Locale
 
 class TimerFragment : BaseFragment() {
+    companion object {
+        private const val ARG_TIME_STRING = "arg_time_string"
+
+        fun newInstance(timeString: String): TimerFragment {
+            return TimerFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TIME_STRING, timeString)
+                }
+            }
+        }
+    }
+
     private var _binding: FragmentTimerBinding? = null
     private val binding get() = _binding!!
 
@@ -22,24 +34,37 @@ class TimerFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTimerBinding.inflate(inflater, container, false)
-        return binding.root // 루트 뷰 반환
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupNumberPickers() // NumberPicker 설정 메서드 호출
-        setupButtons() // 버튼 설정 메서드 호출
-        observeViewModel() // ViewModel 관찰 메서드 호출
+
+        arguments?.getString(ARG_TIME_STRING)?.let { timeString ->
+            val (hours, minutes, seconds) = parseTime(timeString)
+            viewModel.setTime(hours, minutes, seconds)
+        }
+
+        setupNumberPickers()
+        setupButtons()
+        observeViewModel()
     }
 
-    private fun setupNumberPickers() { // NumberPicker 설정 메서드
-        binding.apply { // binding 객체에 apply 함수 적용
-            hourPicker.apply { // 시간 NumberPicker 설정
-                minValue = 0 // 최소값 설정
-                maxValue = 23 // 최대값 설정
-                setFormatter { String.format(Locale.US, "%02d", it) } // 포맷 설정
-                value = viewModel.hours.value ?: 0 // 초기값 설정
-                setOnValueChangedListener { _, _, newVal -> // 값 변경 리스너 설정
+    private fun parseTime(timeString: String): Triple<Int, Int, Int> {
+        val hours = Regex("(\\d+)시간").find(timeString)?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        val minutes = Regex("(\\d+)분").find(timeString)?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        val seconds = Regex("(\\d+)초").find(timeString)?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        return Triple(hours, minutes, seconds)
+    }
+
+    private fun setupNumberPickers() {
+        binding.apply {
+            hourPicker.apply {
+                minValue = 0
+                maxValue = 23
+                setFormatter { String.format(Locale.US, "%02d", it) }
+                value = viewModel.hours.value ?: 0
+                setOnValueChangedListener { _, _, newVal ->
                     viewModel.setTime(newVal, minutePicker.value, secondPicker.value)
                 }
             }
@@ -72,7 +97,7 @@ class TimerFragment : BaseFragment() {
             updateProgress(seconds)
             if (seconds == 0 && viewModel.isRunning.value == true) {
                 showTimeUpDialog()
-                viewModel.stopTimer() // 타이머 종료 시 자동으로 정지
+                viewModel.stopTimer()
             }
         }
 
@@ -106,30 +131,30 @@ class TimerFragment : BaseFragment() {
         }
     }
 
-    private fun updateTimerDisplay(seconds: Int) { // 타이머 디스플레이 업데이트 메서드
-        val h = seconds / 3600 // 시간 계산
-        val m = (seconds % 3600) / 60 // 분 계산
-        val s = seconds % 60 // 초 계산
-        binding.timerText.text = String.format(Locale.US, "%02d:%02d:%02d", h, m, s) // 타이머 텍스트 설정
+    private fun updateTimerDisplay(seconds: Int) {
+        val h = seconds / 3600
+        val m = (seconds % 3600) / 60
+        val s = seconds % 60
+        binding.timerText.text = String.format(Locale.US, "%02d:%02d:%02d", h, m, s)
     }
 
-    private fun updateProgress(secondsLeft: Int) { // 진행 상황 업데이트 메서드
-        viewModel.totalTime.value?.let { total -> // 총 시간이 null이 아니면
-            val progress = ((secondsLeft.toFloat() / total) * 100).toInt() // 진행률 계산
-            binding.timerProgress.progress = progress // 프로그레스 바 업데이트
+    private fun updateProgress(secondsLeft: Int) {
+        viewModel.totalTime.value?.let { total ->
+            val progress = ((secondsLeft.toFloat() / total) * 100).toInt()
+            binding.timerProgress.progress = progress
         }
     }
 
-    private fun showTimeUpDialog() { // 시간 종료 다이얼로그 표시 메서드
-        AlertDialog.Builder(requireActivity()) // AlertDialog 생성
-            .setTitle("Timer Finished") // 제목 설정
-            .setMessage("Time's up!") // 메시지 설정
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() } // 확인 버튼 설정
-            .show() // 다이얼로그 표시
+    private fun showTimeUpDialog() {
+        AlertDialog.Builder(requireActivity())
+            .setTitle("Timer Finished")
+            .setMessage("Time's up!")
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
-    override fun onDestroyView() { // Fragment View가 파괴될 때 호출되는 메서드
-        super.onDestroyView() // 상위 클래스의 메서드 호출
-        _binding = null // binding 객체 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
