@@ -8,12 +8,21 @@ import com.cook_recipe_app.firebase.databinding.MenuListBinding
 
 class MenuAdapter(
     private var menuItems: List<MenuItem>,
+    private var likesCount: Map<String, Int>, // 좋아요 수를 받음
     private val onItemClick: (MenuItem) -> Unit // 클릭 리스너 추가
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    // 데이터 갱신 메서드
-    fun updateData(newMenuItems: List<MenuItem>) {
+//    // 데이터 갱신 메서드
+//    fun updateData(newMenuItems: List<MenuItem>, newLikesCount: Map<String, Int>) {
+//        menuItems = newMenuItems
+//        likesCount.clear()
+//        likesCount.putAll(newLikesCount)
+//        notifyDataSetChanged()
+//    }
+
+    fun updateData(newMenuItems: List<MenuItem>, newLikesCount: Map<String, Int>) {
         menuItems = newMenuItems
+        likesCount = newLikesCount // 새로운 likesCount로 교체
         notifyDataSetChanged()
     }
 
@@ -23,16 +32,26 @@ class MenuAdapter(
             binding.menuHeader.text = header
         }
     }
-
-    // ViewHolder for Item
     inner class ItemViewHolder(private val binding: MenuListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(menuItem: MenuItem) {
             binding.menuText.text = menuItem.name
+            binding.textCount.text = likesCount[menuItem.id]?.toString() ?: "0" // 좋아요 수 표시
+
             binding.root.setOnClickListener {
-                onItemClick(menuItem) // 아이템 클릭 시 리스너 호출
+                onItemClick(menuItem)
             }
         }
     }
+
+    // ViewHolder for Item
+//    inner class ItemViewHolder(private val binding: MenuListBinding) : RecyclerView.ViewHolder(binding.root) {
+//        fun bind(menuItem: MenuItem) {
+//            binding.menuText.text = menuItem.name
+//            binding.root.setOnClickListener {
+//                onItemClick(menuItem) // 아이템 클릭 시 리스너 호출
+//            }
+//        }
+//    }
 
     override fun getItemViewType(position: Int): Int {
         return menuItems[position].type

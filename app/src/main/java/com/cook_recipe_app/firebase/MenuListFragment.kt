@@ -32,7 +32,7 @@ class MenuListFragment : Fragment() {
         binding.menuRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         // 어댑터 초기화
-        adapter = MenuAdapter(emptyList()) { menuItem ->
+        adapter = MenuAdapter(emptyList(), emptyMap()) { menuItem ->
             if (menuItem.type == MenuItem.TYPE_ITEM) {
                 val bibimbabFragment = BibimbabFragment()
                 val bundle = Bundle()
@@ -47,10 +47,18 @@ class MenuListFragment : Fragment() {
         }
         binding.menuRecycler.adapter = adapter
 
-        // LiveData 구독
-        viewModel.menuItems.observe(viewLifecycleOwner, Observer { items ->
-            adapter.updateData(items)
-        })
+//        // LiveData 구독
+//        viewModel.menuItems.observe(viewLifecycleOwner, Observer { items ->
+//            adapter.updateData(items)
+//        })
+
+        viewModel.menuItems.observe(viewLifecycleOwner) { items ->
+            adapter.updateData(items, viewModel.likesCount.value ?: emptyMap())
+        }
+
+        viewModel.likesCount.observe(viewLifecycleOwner) { likes ->
+            adapter.updateData(viewModel.menuItems.value ?: emptyList(), likes)
+        }
 
         // 데이터 로드
         viewModel.loadMenuItems()

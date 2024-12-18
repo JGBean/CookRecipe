@@ -12,6 +12,10 @@ class MenuListViewModel : ViewModel() {
     private val _menuItems = MutableLiveData<List<MenuItem>>()
     val menuItems: LiveData<List<MenuItem>> get() = _menuItems
 
+    // 좋아요 수 LiveData 추가
+    private val _likesCount = MutableLiveData<Map<String, Int>>()
+    val likesCount: LiveData<Map<String, Int>> get() = _likesCount
+
     fun loadMenuItems() {
         db.collection("menuItems")
             .orderBy("category")
@@ -34,10 +38,27 @@ class MenuListViewModel : ViewModel() {
                         items.add(MenuItem(MenuItem.TYPE_ITEM, name, id))
                     }
                     _menuItems.value = items
+                    // 메뉴 아이템 불러오면서 좋아요 수 집계
+                    loadLikesCount()
                 } else {
                     // 오류 발생 시 빈 리스트 전달
                     _menuItems.value = emptyList()
                 }
+            }
+
+
+    }
+
+    private fun loadLikesCount() {
+        db.collection("likes")
+            .get()
+            .addOnSuccessListener { result ->
+                val counts = mutableMapOf<String, Int>()
+                for (document in result) {
+                    val menuId = document.getString("menuId") ?: ""
+                    counts[menuId] = counts.getOrDefault(menuId, 0) + 1
+                }
+                _likesCount.value = counts
             }
     }
 }
