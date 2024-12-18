@@ -35,7 +35,7 @@ class mywriting: BaseFragment() {
         binding.recmywriting.adapter = adapter
 
         // ViewModel 데이터 관찰
-        viewModel.bookMarkItems.observe(viewLifecycleOwner) { items ->
+        viewModel.mywritingItems.observe(viewLifecycleOwner) { items ->
             adapter.updateData(items)
         }
         viewModel.loadBookmarkedItems()
@@ -45,7 +45,7 @@ class mywriting: BaseFragment() {
         // PostDetailFragment로 바로 이동
         val postDetailFragment = PostDetailFragment().apply {
             arguments = Bundle().apply {
-                putString("title", post.item)     // title 전달
+                putString("title", post.title)     // title 전달
                 putString("content", post.content) // content 전달
             }
         }

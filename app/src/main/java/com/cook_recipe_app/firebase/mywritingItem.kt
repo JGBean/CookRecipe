@@ -1,3 +1,3 @@
 package com.cook_recipe_app.firebase
 
-data class mywritingItem (val item: String, val content: String)
+data class mywritingItem (val title: String, val content: String)

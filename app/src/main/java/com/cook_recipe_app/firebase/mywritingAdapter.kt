@@ -13,7 +13,7 @@ class mywritingAdapter(
     class Holder(private val binding: FragmentMywritingrecyclerBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: mywritingItem, onClick: (mywritingItem) -> Unit) {
-            binding.mywritingTitle.text = item.item
+            binding.mywritingTitle.text = item.title
             binding.root.setOnClickListener { onClick(item) } // 클릭 이벤트에서 item 전체를 전달
         }
     }

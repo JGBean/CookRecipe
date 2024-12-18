@@ -11,8 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class mywritingViewModel : ViewModel(){
     private val db = FirebaseFirestore.getInstance()
-    private val _bookMarkItems = MutableLiveData<List<mywritingItem>>()
-    val bookMarkItems: LiveData<List<mywritingItem>> get() = _bookMarkItems
+    private val _mywritingItems = MutableLiveData<List<mywritingItem>>()
+    val mywritingItems: LiveData<List<mywritingItem>> get() = _mywritingItems
 
     // 특정 문서의 데이터를 가져오는 메서드
     fun loadBookmarkedItems() {
@@ -33,10 +33,10 @@ class mywritingViewModel : ViewModel(){
                 }
 
                 // 필터링된 결과를 LiveData에 설정
-                _bookMarkItems.value = items
+                _mywritingItems.value = items
             }
             .addOnFailureListener {
-                _bookMarkItems.value = emptyList() // 실패 시 빈 리스트로 설정
+                _mywritingItems.value = emptyList() // 실패 시 빈 리스트로 설정
             }
     }
 }
