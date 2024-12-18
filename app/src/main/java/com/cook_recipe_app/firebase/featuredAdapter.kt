@@ -15,10 +15,10 @@ class featuredAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: featuredItem, onClick: (String) -> Unit) {
-            binding.featuredName.text = item.item
+            binding.featuredName.text = item.name
 
             // Build the image URL dynamically using menuId
-            val imageUrl = "https://firebasestorage.googleapis.com/v0/b/cook-recipe-app.firebasestorage.app/o/image%2F${item.item}.png?alt=media&token=f78a262c-46ee-4528-be20-928883445b5d"
+            val imageUrl = "https://firebasestorage.googleapis.com/v0/b/cook-recipe-app.firebasestorage.app/o/image%2F${item.id}.png?alt=media&token=f78a262c-46ee-4528-be20-928883445b5d"
 
             // Load image using Glide
             Glide.with(binding.root.context)
@@ -27,7 +27,7 @@ class featuredAdapter(
                 .error(R.drawable.ic_recipe) // Error image
                 .into(binding.featuredImage) // Target ImageView
 
-            binding.root.setOnClickListener { onClick(item.item) }
+            binding.root.setOnClickListener { onClick(item.id) }
         }
     }
 

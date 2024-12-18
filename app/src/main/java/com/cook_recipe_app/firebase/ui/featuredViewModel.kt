@@ -19,7 +19,7 @@ class featuredViewModel : ViewModel() {
     val userId: LiveData<String> get() = _userId
 
     fun loadBookmarkedItems() {
-        db.collection("likes") // Likes collection
+        db.collection("likes")
             .get()
             .addOnSuccessListener { result ->
                 val items = mutableListOf<featuredItem>()
@@ -29,15 +29,30 @@ class featuredViewModel : ViewModel() {
                     val menuId = document.getString("menuId")
 
                     if (username != null && username == userId.value && menuId != null) {
-                        val item = featuredItem(menuId, "")
-                        items.add(item)
+                        fetchMenuName(menuId) { menuName ->
+                            if (menuName != null) {
+                                items.add(featuredItem(menuId, menuName))
+                                _bookMarkItems.value = items
+                            }
+                        }
                     }
                 }
-
-                _bookMarkItems.value = items
             }
             .addOnFailureListener {
                 _bookMarkItems.value = emptyList()
+            }
+    }
+
+    private fun fetchMenuName(menuId: String, callback: (String?) -> Unit) {
+        db.collection("menuItems")
+            .document(menuId)
+            .get()
+            .addOnSuccessListener { document ->
+                val menuName = document.getString("name")
+                callback(menuName)
+            }
+            .addOnFailureListener {
+                callback(null)
             }
     }
 
@@ -50,12 +65,12 @@ class featuredViewModel : ViewModel() {
                     if (document.exists()) {
                         _userId.value = document.getString("id") ?: ""
                     } else {
-                        Log.e("BibimbabViewModel", "User document not found")
+                        Log.e("featuredViewModel", "User document not found")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("BibimbabViewModel", "Error fetching user ID", exception)
+                    Log.e("featuredViewModel", "Error fetching user ID", exception)
                 }
         }
     }
-}
+}//misterraba

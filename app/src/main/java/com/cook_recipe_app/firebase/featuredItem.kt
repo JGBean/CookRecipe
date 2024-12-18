@@ -1,3 +1,3 @@
 package com.cook_recipe_app.firebase
 
-data class featuredItem(val item: String, val imagePath: String)
+data class featuredItem(val id: String, val name: String)
