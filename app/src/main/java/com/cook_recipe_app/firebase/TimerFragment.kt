@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.cook_recipe_app.firebase.ui.TimerViewModel
 import com.cook_recipe_app.firebase.databinding.FragmentTimerBinding
+import com.cook_recipe_app.firebase.ui.TimerViewModel
 import java.util.Locale
 
 class TimerFragment : BaseFragment() {
